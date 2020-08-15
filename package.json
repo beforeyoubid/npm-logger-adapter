@@ -1,0 +1,47 @@
+{
+  "name": "@beforeyoubid/logger-adapter",
+  "version": "0.0.3",
+  "description": "A platform logger module to send the log messages to LogDNA.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "lint": "eslint --max-warnings 0 '**/*.{ts,tsx,js,jsx}'",
+    "lint:fix": "eslint --fix --max-warnings 0 '**/*.{ts,tsx,js,jsx}'",
+    "test": "yarn build && jest --config jestconfig.json",
+    "test-only": "jest --config jestconfig.json",
+    "build": "tsc",
+    "build-and-publish": "yarn build && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beforeyoubid/npm-logger-adapter.git"
+  },
+  "keywords": [],
+  "author": "chainat@beforeyoubid.com.au",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beforeyoubid/npm-logger-adapter/issues"
+  },
+  "homepage": "https://github.com/beforeyoubid/npm-logger-adapter#readme",
+  "dependencies": {
+    "logdna": "^3.5.1",
+    "logdna-winston": "^2.3.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.9",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.4.0",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.2.0",
+    "typescript": "^3.9.7"
+  }
+}
