@@ -1,4 +1,4 @@
-import { consoleLogger } from '../dist';
+import { consoleLogger } from '../src';
 
 describe('Console Logger', () => {
   it('should be able to load module', () => {

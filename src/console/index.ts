@@ -1,3 +1,5 @@
+import { ILogDNAParams } from '../types';
+
 import { getLogParams } from '../params';
 import { getLogger } from './logger';
 import { isLogDNAEnabled } from '../util';

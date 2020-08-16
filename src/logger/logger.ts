@@ -1,3 +1,4 @@
+import { ILogDNAParams } from '../types';
 const logdnaWinston = require('logdna-winston');
 const winston = require('winston');
 const { isLogDNAEnabled } = require('../util');
