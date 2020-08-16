@@ -5,6 +5,5 @@ describe('Console Logger', () => {
     const objType = typeof consoleLogger;
     expect(objType).toEqual('object');
     expect(typeof consoleLogger.init).toEqual('function');
-    expect(typeof consoleLogger.flushAll).toEqual('function');
   });
 });
