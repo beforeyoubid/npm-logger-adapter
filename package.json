@@ -1,6 +1,6 @@
 {
   "name": "@beforeyoubid/logger-adapter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A platform logger module to send the log messages to LogDNA.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
     "src/**/*"
   ],
   "scripts": {
-    "lint": "eslint --max-warnings 0 '**/*.{ts,tsx,js,jsx}'",
+    "lint": "eslint --max-warnings 0 '**/*.{ts,tsx,js,jsx}' && tsc --noEmit",
     "lint:fix": "eslint --fix --max-warnings 0 '**/*.{ts,tsx,js,jsx}'",
     "test": "yarn build && jest --config jestconfig.json",
     "test-only": "jest --config jestconfig.json",

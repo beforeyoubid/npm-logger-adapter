@@ -1,3 +1,5 @@
+import { ILogDNAParams } from './types';
+
 const {
   LOG_LEVEL = 'info',
   LOGDNA_KEY = '',
