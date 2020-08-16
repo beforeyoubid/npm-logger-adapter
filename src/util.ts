@@ -22,11 +22,11 @@ const flushAll = async (): Promise<void> => {
 };
 
 /**
- * Lambda wrapper to ensure we flush message before returning the response
+ * Lambda wrapper to ensure we flush messages before returning the response
  * @param lambdaHandler
  */
-const ensureFlushAll = (lambdaHandler: any) => {
-  return async (event: any, context: any) => {
+const ensureFlushAll = (lambdaHandler: LambdaHandlerWithAsyncFunction): LambdaHandlerWithAsyncFunction => {
+  return async (event: any, context: any): Promise<any> => {
     try {
       const result = await lambdaHandler(event, context);
       await flushAll();
@@ -38,4 +38,25 @@ const ensureFlushAll = (lambdaHandler: any) => {
   };
 };
 
-export { isLogDNAEnabled, flushAll, ensureFlushAll };
+/**
+ * A Lambda wrapper to ensure we flush messages before a Lambda function get terminated
+ * NOTE: For non-async handlers, AWS Lambda will wait until the event loop is completed.
+ * This means after a callback function is called, a Lambda function still run
+ * and we can catch the final clean up.
+ * REF: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-handler.html
+ *
+ * @param lambdaHandler
+ */
+const ensureFlushAllCallback = (
+  lambdaHandler: LambdaHandlerWithCallbackFunction
+): LambdaHandlerWithCallbackFunction => {
+  return (event: any, context: any, callback: CallbackFunction): void => {
+    const thisCallback = (error: any, result: any): void => {
+      callback(error, result);
+      flushAll();
+    };
+    lambdaHandler(event, context, thisCallback);
+  };
+};
+
+export { isLogDNAEnabled, flushAll, ensureFlushAll, ensureFlushAllCallback };

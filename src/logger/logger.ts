@@ -31,6 +31,8 @@ const getLogger = (params: ILogDNAParams): any => {
   const logger = createWinstonLogger(logLevel);
   if (isEnabled) {
     logger.add(new logdnaWinston(logDNAOptions));
+  } else {
+    logger.info(`LOGDNA is disabled`);
   }
   return logger;
 };

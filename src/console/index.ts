@@ -18,18 +18,13 @@ const init = (params: ILogDNAParams = logParams): void => {
 
   // Wrap console object
   loggerObject = isEnabled ? getLogger(params) : {};
-};
-
-const flushAll = (cb?: EmptyCBFunction): void => {
-  // If available, means we can flush log message
-  if (!!loggerObject.flushAll) {
-    loggerObject.flushAll(cb);
+  if (!isEnabled) {
+    console.info(`LOGDNA is disabled`);
   }
 };
 
 const consoleLogger = {
   init,
-  flushAll,
 };
 
 export { consoleLogger };

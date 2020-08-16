@@ -3,7 +3,7 @@ declare global {
   type EmptyCBFunction = () => void;
   type CallbackFunction = (err: any, data: any) => void;
   type LambdaHandlerWithAsyncFunction = (event: any, context: any) => Promise<any>;
-  type LambdaHandlerWithCallbackFunction = (event: any, context: any, fn: CallbackFunction) => Promise<any>;
+  type LambdaHandlerWithCallbackFunction = (event: any, context: any, fn: CallbackFunction) => void;
   interface ILogDNALogOptions {
     key: string;
     env: string;

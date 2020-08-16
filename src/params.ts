@@ -1,4 +1,10 @@
-const { LOG_LEVEL = 'info', LOGDNA_KEY = '', STAGE = 'n/a', AWS_LAMBDA_FUNCTION_NAME = 'n/a' } = process.env;
+const {
+  LOG_LEVEL = 'info',
+  LOGDNA_KEY = '',
+  STAGE = 'n/a',
+  AWS_LAMBDA_FUNCTION_NAME = 'n/a',
+  LOGDNA_ENABLED = 'true',
+} = process.env;
 
 const logDNAOptions = {
   key: LOGDNA_KEY,
@@ -10,14 +16,18 @@ const logDNAOptions = {
   handleExceptions: true,
 };
 
+const sendToRemote = (logDNAKey: string, logDNAEnabled: string): boolean => {
+  return !!logDNAKey && logDNAEnabled === 'true';
+};
+
 const getLogParams = (): ILogDNAParams => {
   return {
     logLevel: LOG_LEVEL,
     logDNAKey: LOGDNA_KEY,
-    sendToRemote: !!LOGDNA_KEY,
+    sendToRemote: sendToRemote(LOGDNA_KEY, LOGDNA_ENABLED),
     functionName: AWS_LAMBDA_FUNCTION_NAME,
     logDNAOptions,
   };
 };
 
-export { getLogParams };
+export { getLogParams, sendToRemote };
