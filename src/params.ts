@@ -43,6 +43,7 @@ const getLogParams = (env = process?.env || {}): ILogDNAParams => {
     logLevel: LOG_LEVEL,
     logDNAKey: LOGDNA_KEY,
     sendToRemote: sendToRemote(LOGDNA_KEY, LOGDNA_ENABLED),
+    logDNASuppressFlushAll: LOGDNA_SUPPRESS_FLUSH_ALL === 'true',
     functionName: AWS_LAMBDA_FUNCTION_NAME,
     logDNAOptions,
   };

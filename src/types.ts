@@ -16,6 +16,7 @@ export interface ILogDNAParams {
   logLevel: string;
   logDNAKey: string;
   sendToRemote: boolean;
+  logDNASuppressFlushAll: boolean;
   functionName: string;
   logDNAOptions: ILogDNALogOptions;
 }
