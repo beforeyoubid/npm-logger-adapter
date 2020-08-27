@@ -2,7 +2,7 @@ import { ILogDNAParams } from '../types';
 
 import { getLogParams } from '../params';
 import { getLogger } from './logger';
-import { isLogDNAEnabled } from '../util';
+import { isLogDNAEnabled, flushAll } from '../util';
 
 let loggerObject: any;
 const logParams = getLogParams();
@@ -27,6 +27,7 @@ const init = (params: ILogDNAParams = logParams): void => {
 
 const consoleLogger = {
   init,
+  flushAll,
 };
 
 export { consoleLogger };

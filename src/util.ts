@@ -2,6 +2,11 @@ import { LambdaHandlerWithAsyncFunction, LambdaHandlerWithCallbackFunction, Call
 
 const LogDNALogger = require('logdna');
 const debug = require('util').debuglog('logger-adapter');
+const { FALLBACK_TIMEOUT_AFTER_FLUSHING } = require('./consts');
+const { getLogParams } = require('./params');
+
+// timeout
+let timeout: NodeJS.Timeout;
 
 /**
  * Handy function to check if we are sending to LogDNA
@@ -11,15 +16,35 @@ const debug = require('util').debuglog('logger-adapter');
 const isLogDNAEnabled = (logDNAKey: string, sendToRemote: boolean): boolean => !!logDNAKey && sendToRemote;
 
 /**
+ * REturn if we need to suppress flushAll on a local machine
+ */
+const suppressFlushAll = (): boolean => getLogParams()?.logDNASuppressFlushAll || false;
+
+/**
  * Send all log messages to LogDNA before lambda is terminated
  */
 const flushAll = async (): Promise<void> => {
   return new Promise(resolve => {
-    debug('Flushing all logs');
+    debug('Flushing all logs...');
     LogDNALogger.flushAll(() => {
       debug('Completed flushing all log messages');
+      if (timeout) {
+        clearTimeout(timeout);
+      }
       resolve();
     });
+  });
+};
+
+/**
+ * Fallback promise just in
+ */
+const timeoutPromise = () => {
+  return new Promise(resolve => {
+    timeout = setTimeout(() => {
+      debug('Flushing timeout has reached. Ignore flushing messages...');
+      resolve();
+    }, FALLBACK_TIMEOUT_AFTER_FLUSHING);
   });
 };
 
@@ -31,10 +56,10 @@ const ensureFlushAll = (lambdaHandler: LambdaHandlerWithAsyncFunction): LambdaHa
   return async (event: any, context: any): Promise<any> => {
     try {
       const result = await lambdaHandler(event, context);
-      await flushAll();
+      if (!suppressFlushAll()) await Promise.race([flushAll(), timeoutPromise()]);
       return result;
     } catch (e) {
-      await flushAll();
+      if (!suppressFlushAll()) await Promise.race([flushAll(), timeoutPromise()]);
       throw e;
     }
   };
@@ -55,7 +80,7 @@ const ensureFlushAllCallback = (
   return (event: any, context: any, callback: CallbackFunction): void => {
     const thisCallback = (error: any, result: any): void => {
       callback(error, result);
-      flushAll();
+      if (!suppressFlushAll()) flushAll();
     };
     lambdaHandler(event, context, thisCallback);
   };
