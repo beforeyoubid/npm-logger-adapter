@@ -2,6 +2,7 @@ import { LambdaHandlerWithAsyncFunction, LambdaHandlerWithCallbackFunction, Call
 
 const LogDNALogger = require('@logdna/logger');
 const debug = require('util').debuglog('logger-adapter');
+const { once } = require('events')
 const { FALLBACK_TIMEOUT_AFTER_FLUSHING } = require('./consts');
 const { getLogParams } = require('./params');
 
@@ -20,21 +21,23 @@ const isLogDNAEnabled = (logDNAKey: string, sendToRemote: boolean): boolean => !
  */
 const suppressFlushAll = (): boolean => getLogParams()?.logDNASuppressFlushAll || false;
 
+const sleep = (time: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, time));
+
 /**
  * Send all log messages to LogDNA before lambda is terminated
  */
 const flushAll = async (): Promise<void> => {
-  return new Promise(resolve => {
-    debug('Flushing all logs...');
-    LogDNALogger.addEventListener('cleared', () => {
-      debug('Completed flushing all log messages');
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      resolve();
-    });
-    LogDNALogger.flush();
-  });
+  debug('Flushing all logs...');
+  LogDNALogger.flush()
+  await once(LogDNALogger, 'cleared')
+  // Everything clear.  Did Lambda buffer anything?
+  await sleep(1000);
+  LogDNALogger.flush()
+  await once(LogDNALogger, 'cleared')
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+  debug('Completed flushing all log messages');
 };
 
 /**
