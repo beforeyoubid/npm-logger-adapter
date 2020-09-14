@@ -1,5 +1,5 @@
 import { consoleLogger } from './console';
-import { logger } from './logger';
+import { logger, logdnaTransport } from './logger';
 import { getLogParams } from './params';
 import { flushAll, ensureFlushAll, ensureFlushAllCallback } from './flush';
-export { consoleLogger, logger, getLogParams, flushAll, ensureFlushAll, ensureFlushAllCallback };
+export { logdnaTransport, consoleLogger, logger, getLogParams, flushAll, ensureFlushAll, ensureFlushAllCallback };
