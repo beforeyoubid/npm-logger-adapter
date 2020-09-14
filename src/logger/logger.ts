@@ -26,16 +26,21 @@ const createWinstonLogger = (logLevel: string) => {
   return logger;
 };
 
+let logdnaTransport: any;
+
 const getLogger = (params: ILogDNAParams): any => {
   const { logLevel, logDNAOptions, logDNAKey, sendToRemote } = params;
   const isEnabled = isLogDNAEnabled(logDNAKey, sendToRemote);
   const logger = createWinstonLogger(logLevel);
+  logdnaTransport = new logdnaWinston(logDNAOptions);
   if (isEnabled) {
-    logger.add(new logdnaWinston(logDNAOptions));
+    logger.add(logdnaTransport);
   } else {
     logger.info(`LOGDNA is disabled`);
   }
   return logger;
 };
 
-export { getLogger };
+const getLogdnaTransport = () => logdnaTransport;
+
+export { getLogger, getLogdnaTransport };
