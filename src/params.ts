@@ -36,6 +36,7 @@ const getLogParams = (env = process?.env || {}): ILogDNAParams => {
     hostname: STAGE,
     index_meta: true,
     tags: [AWS_LAMBDA_FUNCTION_NAME, STAGE],
+    level: LOG_LEVEL,
     handleExceptions: true,
   };
 

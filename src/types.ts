@@ -9,6 +9,7 @@ export interface ILogDNALogOptions {
   hostname: string;
   index_meta: boolean;
   tags: Array<string>;
+  level: string;
   handleExceptions: boolean;
 }
 
