@@ -2,8 +2,7 @@ import { ILogDNAParams } from '../types';
 
 import { getLogParams } from '../params';
 import { getLogger } from './logger';
-import { isLogDNAEnabled } from '../util';
-import { flushAll } from '../flush';
+import { isLogDNAEnabled, flushAll } from '../util';
 
 let loggerObject: any;
 const logParams = getLogParams();
