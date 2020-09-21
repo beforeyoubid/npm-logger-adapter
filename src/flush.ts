@@ -1,5 +1,5 @@
 import { LambdaHandlerWithAsyncFunction, LambdaHandlerWithCallbackFunction, CallbackFunction } from './types';
-import { logdnaTransport } from './logger';
+import { logger } from './logger';
 
 const debug = require('util').debuglog('logger-adapter');
 const { once } = require('events')
@@ -19,11 +19,18 @@ export const sleep = (time: number): Promise<void> => new Promise((resolve) => s
 /**
  * Send all log messages to LogDNA before lambda is terminated
  */
-export const flushAll = (): Promise<void> => {
+export const flushAll = async (): Promise<void> => {
   debug('Flushing all logs...');
-  return new Promise(resolve => 
-    logdnaTransport.Logger.flushAll(resolve)
-  );
+  logger.flush()
+  await once(logger, 'cleared')
+  // Everything clear.  Did Lambda buffer anything?
+  await sleep(1000);
+  logger.flush()
+  await once(logger, 'cleared')
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+  debug('Completed flushing all log messages');
 };
 
 /**
