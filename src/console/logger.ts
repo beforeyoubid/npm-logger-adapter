@@ -1,5 +1,5 @@
 import { ILogDNAParams } from '../types';
-const LogDNALogger = require('@logdna/logger');
+const LogDNALogger = require('logdna');
 const { flushAll } = require('../util');
 let logger: any;
 
