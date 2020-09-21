@@ -1,6 +1,6 @@
 import { LambdaHandlerWithAsyncFunction, LambdaHandlerWithCallbackFunction, CallbackFunction } from './types';
 
-const LogDNALogger = require('@logdna/logger');
+const LogDNALogger = require('logdna');
 const debug = require('util').debuglog('logger-adapter');
 const { FALLBACK_TIMEOUT_AFTER_FLUSHING } = require('./consts');
 const { getLogParams } = require('./params');
