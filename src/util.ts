@@ -26,14 +26,13 @@ const suppressFlushAll = (): boolean => getLogParams()?.logDNASuppressFlushAll |
 const flushAll = async (): Promise<void> => {
   return new Promise(resolve => {
     debug('Flushing all logs...');
-    LogDNALogger.addEventListener('cleared', () => {
+    LogDNALogger.flushAll(() => {
       debug('Completed flushing all log messages');
       if (timeout) {
         clearTimeout(timeout);
       }
       resolve();
     });
-    LogDNALogger.flush();
   });
 };
 
