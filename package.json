@@ -1,6 +1,6 @@
 {
   "name": "@beforeyoubid/logger-adapter",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A platform logger module to send the log messages to LogDNA.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/beforeyoubid/npm-logger-adapter#readme",
   "dependencies": {
-    "logdna": "^3.5.1",
+    "logdna": "^3.5.2",
     "logdna-winston": "^2.3.2",
     "winston": "^3.3.3"
   },
