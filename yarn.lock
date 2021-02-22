@@ -850,6 +850,13 @@ axios@^0.19.0:
   dependencies:
     follow-redirects "1.5.10"
 
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
+
 babel-jest@^26.3.0:
   version "26.3.0"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-26.3.0.tgz#10d0ca4b529ca3e7d1417855ef7d7bd6fc0c3463"
@@ -1755,6 +1762,11 @@ follow-redirects@1.5.10:
   integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
   dependencies:
     debug "=3.1.0"
+
+follow-redirects@^1.10.0:
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.2.tgz#dd73c8effc12728ba5cf4259d760ea5fb83e3147"
+  integrity sha512-6mPTgLxYm3r6Bkkg0vNM0HTjfGrOEtsfbhagQvbxDEsEkpNhw582upBaoRZylzen6krEmxXJgt9Ju6HiI4O7BA==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -2848,13 +2860,29 @@ logdna-winston@^2.3.2:
     logdna "^3.5.0"
     winston "^3.2.1"
 
-logdna@^3.5.0, logdna@^3.5.1:
+logdna@^3.5.0:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/logdna/-/logdna-3.5.1.tgz#fb37109dfd5f0db746efa26f2b79bf33c024b97f"
   integrity sha512-7D1h85fSK74TWqsENwmYrwbGFAk3P+Cl/V9tGZYrAybewDdelx3SXcp5e1iN7vRoSj8SzJ4PSgGmEYa2maCh7A==
   dependencies:
     agentkeepalive "^2.2.0"
     axios "^0.19.0"
+    es6-promise "^4.2.6"
+    json-stringify-safe "^5.0.1"
+    lodash.bind "^4.2.1"
+    lodash.clonedeep "^4.5.0"
+    lodash.foreach "^4.5.0"
+    lodash.isequal "^4.5.0"
+    object-sizeof "^1.0.10"
+    valid-url "^1.0.9"
+
+logdna@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/logdna/-/logdna-3.5.2.tgz#5352ece53b766a7fef5b6a15203ddabce456a4c8"
+  integrity sha512-UG1sfphdnhRQKNs3tc8szfihheWd/D6pW7TDmQHyRS7hzt3juAh4Y8IcxCSyb6qBiyOF3iNhlsNyYrsQeB3/Kg==
+  dependencies:
+    agentkeepalive "^2.2.0"
+    axios "^0.21.1"
     es6-promise "^4.2.6"
     json-stringify-safe "^5.0.1"
     lodash.bind "^4.2.1"
