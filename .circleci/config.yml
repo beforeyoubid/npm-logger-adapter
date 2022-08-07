@@ -100,7 +100,6 @@ jobs:
             yarn install --registry http://localhost:4873
             yarn test
       - save_cache:
-      - save_cache:
           key: node_modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/app/node_modules/
