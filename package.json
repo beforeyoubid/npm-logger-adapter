@@ -5,18 +5,22 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/**/*",
-    "src/**/*"
+    "dist/**/*"
   ],
   "scripts": {
     "lint": "eslint --max-warnings 0 '**/*.{ts,tsx,js,jsx}' && tsc --noEmit",
     "lint:fix": "eslint --fix --max-warnings 0 '**/*.{ts,tsx,js,jsx}'",
-    "test": "yarn build && jest --config jestconfig.json",
-    "test:coverage": "yarn build && jest --config jestconfig.json --watch --coverage",
-    "test:ci": "yarn build && jest --config jestconfig.json --verbose=false --coverage",
-    "test-only": "jest --config jestconfig.json",
-    "build": "tsc",
-    "build-and-publish": "npm run build && npm publish --access public"
+    "test": "yarn build && jest",
+    "test:coverage": "yarn build && jest --watch --coverage",
+    "test:ci": "jest --verbose=false --coverage",
+    "test-only": "jest",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly --declaration --project tsconfig.build.json",
+    "build:js": "swc src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline --ignore=.spec.js",
+    "ts": "tsc --noEmit",
+    "build-and-publish": "npm run build && npm publish --access public",
+    "build-and-publish-dryrun": "npm run build && npm publish --dry-run",
+    "build-and-publish-dryrun-ci": "npm run build && npm publish --registry http://localhost:4873"
   },
   "repository": {
     "type": "git",
@@ -35,17 +39,23 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.9",
-    "@types/node": "^14.0.27",
-    "@typescript-eslint/eslint-plugin": "^3.9.0",
-    "@typescript-eslint/parser": "^3.9.0",
-    "eslint": "^7.6.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "jest": "^26.4.0",
-    "prettier": "^2.0.5",
-    "ts-jest": "^26.2.0",
-    "typescript": "^3.9.7"
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.224",
+    "@swc/jest": "^0.2.22",
+    "@types/jest": "28.1.6",
+    "@types/node": "^18.6.4",
+    "@typescript-eslint/eslint-plugin": "5.32.0",
+    "@typescript-eslint/parser": "5.32.0",
+    "danger": "^11.1.1",
+    "danger-plugin-yarn": "^1.5.1",
+    "eslint": "8.21.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "jest": "28.1.3",
+    "jest-junit": "^14.0.0",
+    "prettier": "2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "4.7.4"
   },
   "resolutions": {
     "colors": "1.4.0"

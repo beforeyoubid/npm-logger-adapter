@@ -1,4 +1,4 @@
-import { logger } from '../src';
+import { logger } from '../src/index';
 
 describe('Logger', () => {
   it('should be able to load module', () => {
