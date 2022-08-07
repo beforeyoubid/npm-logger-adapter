@@ -5,7 +5,10 @@ uplinks:
     url: https://registry.npmjs.org/
 
 packages:
-  '**':
+  '@beforeyoubid/logger-adapter':
     access: $all
     publish: $anonymous
+    proxy: npmjs
+  '**':
+    access: $all
     proxy: npmjs
