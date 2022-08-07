@@ -1,0 +1,30 @@
+name: 'Danger JS'
+on: [pull_request]
+
+jobs:
+  danger:
+    name: Danger
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: install yarn
+        run: npm install -g yarn
+      - uses: actions/cache@v2
+        id: node-module-cache
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+      - name: yarn install
+        run: yarn install  --frozen-lockfile
+      - name: Danger
+        run: BRANCH=${GITHUB_REF##*/} yarn danger ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
