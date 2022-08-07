@@ -16,7 +16,10 @@
     "test:ci": "yarn build && jest --config jestconfig.json --verbose=false --coverage",
     "test-only": "jest --config jestconfig.json",
     "build": "tsc",
-    "build-and-publish": "npm run build && npm publish --access public"
+    "ts": "tsc --noEmit",
+    "build-and-publish": "npm run build && npm publish --access public",
+    "build-and-publish-dryrun": "npm run build && npm publish --dry-run",
+    "build-and-publish-dryrun-ci": "npm run build && npm publish --registry http://localhost:4873"
   },
   "repository": {
     "type": "git",
