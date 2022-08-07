@@ -39,7 +39,7 @@ const flushAll = async (): Promise<void> => {
 /**
  * Fallback promise just in
  */
-const timeoutPromise = () => {
+const timeoutPromise = (): Promise<void> => {
   return new Promise(resolve => {
     timeout = setTimeout(() => {
       debug('Flushing timeout has reached. Ignore flushing messages...');
