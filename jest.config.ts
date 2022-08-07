@@ -3,7 +3,7 @@ export default {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
-  testMatch: ['(/__tests__/.*|(\\.|/)(test|spec))\\.ts$'],
+  testMatch: ['**/__tests__/**/*.[jt]s?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest'],
