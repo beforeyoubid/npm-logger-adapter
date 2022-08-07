@@ -1,7 +1,7 @@
 import { DangerDSLType } from 'danger/distribution/dsl/DangerDSL';
 import { DangerContext } from 'danger/distribution/runner/Dangerfile';
 
-export type globalWithDanger = NodeJS.Global &
+export type globalWithDanger = typeof globalThis &
   typeof globalThis & {
     danger: DangerDSLType;
     message: DangerContext['message'];
