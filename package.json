@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/**/*",
-    "src/**/*"
+    "dist/**/*"
   ],
   "scripts": {
     "lint": "eslint --max-warnings 0 '**/*.{ts,tsx,js,jsx}' && tsc --noEmit",
@@ -15,7 +14,9 @@
     "test:coverage": "yarn build && jest --watch --coverage",
     "test:ci": "jest --verbose=false --coverage",
     "test-only": "jest",
-    "build": "tsc",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly --declaration --project tsconfig.build.json",
+    "build:js": "swc src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline --ignore=.spec.js",
     "ts": "tsc --noEmit",
     "build-and-publish": "npm run build && npm publish --access public",
     "build-and-publish-dryrun": "npm run build && npm publish --dry-run",
@@ -38,6 +39,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.224",
     "@swc/jest": "^0.2.22",
     "@types/jest": "28.1.6",
