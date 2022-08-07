@@ -8,4 +8,6 @@ export default {
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest'],
   },
+  testPathIgnorePatterns: ['dist'],
+  coveragePathIgnorePatterns: ['dist'],
 };

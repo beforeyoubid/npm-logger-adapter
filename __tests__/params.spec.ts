@@ -1,4 +1,4 @@
-import { getLogParams, sendToRemote } from '../params';
+import { getLogParams, sendToRemote } from '../src/params';
 
 describe('Log Params', () => {
   it('return correct sendToRemote status', () => {

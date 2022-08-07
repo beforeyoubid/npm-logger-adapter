@@ -7,6 +7,6 @@
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["src", "Dangerfile", "danger/*"],
+  "include": ["src", "Dangerfile", "danger/*", "__tests__"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }
