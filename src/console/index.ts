@@ -12,6 +12,7 @@ const logParams = getLogParams();
  * @param params
  */
 const init = (params: ILogDNAParams = logParams): void => {
+  const { AWS_LAMBDA_FUNCTION_NAME } = process.env;
   // If has wrapped already, don't do it again
   if (!!loggerObject) return;
 
@@ -20,7 +21,7 @@ const init = (params: ILogDNAParams = logParams): void => {
 
   // Wrap console object
   loggerObject = isEnabled ? getLogger(params) : {};
-  if (!isEnabled) {
+  if (!isEnabled && AWS_LAMBDA_FUNCTION_NAME !== undefined) {
     console.info(`LOGDNA is disabled`);
   }
 };
