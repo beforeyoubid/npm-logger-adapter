@@ -26,6 +26,8 @@ const createWinstonLogger = (logLevel: string) => {
   return logger;
 };
 
+const { AWS_LAMBDA_FUNCTION_NAME } = process.env;
+
 const getLogger = (params: ILogDNAParams): any => {
   const { logLevel, logDNAOptions, logDNAKey, sendToRemote } = params;
   const isEnabled = isLogDNAEnabled(logDNAKey, sendToRemote);
@@ -33,7 +35,9 @@ const getLogger = (params: ILogDNAParams): any => {
   if (isEnabled) {
     logger.add(new logdnaWinston(logDNAOptions));
   } else {
-    // logger.info(`LOGDNA is disabled`);
+    if (AWS_LAMBDA_FUNCTION_NAME !== undefined) {
+      logger.debug(`LOGDNA is disabled`);
+    }
   }
   return logger;
 };
