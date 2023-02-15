@@ -33,7 +33,7 @@ const getLogger = (params: ILogDNAParams): any => {
   if (isEnabled) {
     logger.add(new logdnaWinston(logDNAOptions));
   } else {
-    logger.info(`LOGDNA is disabled`);
+    // logger.info(`LOGDNA is disabled`);
   }
   return logger;
 };
