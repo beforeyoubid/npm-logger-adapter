@@ -3,7 +3,11 @@ jest.mock('@logdna/logger', () => ({
   ...jest.requireActual('@logdna/logger'),
   createLogger: jest.fn(), // mock one specific function to observe behavior
 }));
-import { createLogDNAClient } from '../logdnaClient';
+import { createLogDNAClient, isClientAvailable } from '../logdnaClient';
+jest.mock('../logdnaClient', () => ({
+  ...jest.requireActual('../logdnaClient'),
+  isClientAvailable: jest.fn(),
+}));
 import type { ILogDNAParams } from '../../types';
 
 describe('createLogDNAClient()', () => {
@@ -19,14 +23,13 @@ describe('createLogDNAClient()', () => {
   });
 
   it('should be able to load module', () => {
-    // Watch out - this module only perform the createLogger once, test module multiple times you need to manage
-    // logdnaClient singleton object
     (createLogger as jest.Mock).mockReturnValue('' as unknown as LogDNALogger.Logger);
     createLogDNAClient(params);
     expect(createLogger).toHaveBeenCalledTimes(1);
   });
 
   it('should return the same object if get called multiple times', () => {
+    (isClientAvailable as jest.Mock).mockReturnValueOnce(false);
     (createLogger as jest.Mock).mockReturnValue(someClient);
     createLogDNAClient(params);
 

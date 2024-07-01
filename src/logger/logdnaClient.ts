@@ -1,8 +1,15 @@
+const debug = require('util').debuglog('logger-adapter');
 import LogDNALogger, { type ConstructorOptions } from '@logdna/logger';
 import { type ILogDNAParams } from '../types';
 
 // A singleton object in this module
 let logdnaClient: LogDNALogger.Logger;
+
+/**
+ * Handy utility to check if LogDNA client is available, also support unit test
+ * @returns
+ */
+export const isClientAvailable = (): boolean => !!logdnaClient;
 
 /**
  * Create one single instance of LogDNA (Mezmo) client so it can be shared/used in two cases
@@ -16,7 +23,7 @@ let logdnaClient: LogDNALogger.Logger;
  * @returns
  */
 export const createLogDNAClient = (params: ILogDNAParams): LogDNALogger.Logger => {
-  if (logdnaClient) return logdnaClient;
+  if (isClientAvailable()) return logdnaClient;
 
   const { logDNAKey, logDNAOptions } = params;
   const { env, app, tags, level } = logDNAOptions;
@@ -39,5 +46,8 @@ export const createLogDNAClient = (params: ILogDNAParams): LogDNALogger.Logger =
  * @returns
  */
 export const getLogDNAClient = (): LogDNALogger.Logger => {
+  if (!isClientAvailable()) {
+    debug('LogDNA client is not created yet. Please call createLogDNAClient() first');
+  }
   return logdnaClient;
 };
