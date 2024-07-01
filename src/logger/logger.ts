@@ -5,20 +5,18 @@ import { LogDNATransport } from '../transports/logdnaWinston';
 import { isLogDNAEnabled } from '../util';
 const { format, transports } = winston;
 
+const formatFunction = (info: any) => `${info.timestamp} - ${info.level}: ${info.message}`;
+
 const createWinstonLogger = (logLevel: string): winston.Logger => {
   const logger = winston.createLogger({
     level: logLevel || 'info',
-    format: format.combine(
-      format.timestamp(),
-      format.simple(),
-      format.printf((info: any) => `${info.timestamp} - ${info.level}: ${info.message}`)
-    ),
+    format: format.combine(format.timestamp(), format.simple(), format.printf(formatFunction)),
     transports: [
       new transports.Console({
         format: format.combine(
           format.timestamp(),
           format.simple(),
-          format.printf((info: any) => `${info.timestamp} - ${info.level}: ${info.message}`),
+          format.printf(formatFunction),
           format.colorize({ all: true })
         ),
       }),
