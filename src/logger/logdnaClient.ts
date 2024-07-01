@@ -29,7 +29,7 @@ export const createLogDNAClient = (params: ILogDNAParams): LogDNALogger.Logger =
     level,
   };
 
-  // Create a singleton client
+  // Create a new LogDNA client
   logdnaClient = LogDNALogger.createLogger(logDNAKey, options);
   return logdnaClient;
 };
