@@ -21,3 +21,5 @@ export interface ILogDNAParams {
   functionName: string;
   logDNAOptions: ILogDNALogOptions;
 }
+
+export type WrappedLogger = Record<string, (...args: unknown[]) => void>;
