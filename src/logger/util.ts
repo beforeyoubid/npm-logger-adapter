@@ -2,7 +2,7 @@ import { logger } from './index';
 import { WrappedLogger } from '../types';
 type LogFunction = (...args: unknown[]) => void;
 
-const logFunctionsToWrap = ['debug', 'info', 'warn', 'error', 'xxxx'];
+const logFunctionsToWrap = ['debug', 'info', 'warn', 'error'];
 
 const toString = (args: unknown[]) => {
   return args.map(arg => JSON.stringify(arg)).join(' ');
