@@ -1,9 +1,18 @@
-# LogDNA Logger Adapter
+# Mezmo (Formerly LogDNA) Logger Adapter
 
-This is a platform logger module that is able to support multiple logging scenarios.
+Notes - LogDNA made a decision not to rename the library to Mezmo just yet. To avoid having two names, we decided to
+keep the variable, class and etc as LogDNA for now.
 
-- A `console` log wrapper so it can send all logs from the native `console` object to LogDNA.
-- A Winston log wrapper logger which output better colour and we can send log messages to LogNDA.
+---
+
+This is our BYB logger module that is designed to support multiple two logging scenarios.
+
+- Some repos may heavily rely on console.log() or similar to output log on the console. We can utilise this module to
+  wrap around the original `console` so all logs can be sent to Mezmo as well. The service need to add
+  `consoleLogger.init()` in the handler.
+- A Winston logger - Winston creates a generic logger objec that allows us to perform various operations on the log e.g.
+  change the colour of the log line, format message, can customise/add a custom code (using a transport mechanism) to
+  send log messages to Mezmo or store in the database if we want.
 
 This module is designed to work on a native node runtime and in a Lambda environment. For Lambda, please see the
 [Flush All Messages](#Flush-All-Messages) section below.
@@ -24,6 +33,24 @@ This module is designed to work on a native node runtime and in a Lambda environ
 
 If you are using `console.log` on the existing code base and not ready to switch to Winston logger just yet, this module
 can also helps you out as well.
+
+### Versions
+
+- **v1.x.x (first version)**
+  - Originally created in 2020 but the `logdna` module is no longer maintained (https://www.npmjs.com/package/logdna).
+    We need to move away from it.
+- **v2.x.x**
+  - Utilise the latest module actively maintained by Mezmo team (https://www.npmjs.com/package/@logdna/logger)
+  - Fix a missing some log line issue occured due to the the fact that `logdna-winston` module creates a separate logdna
+    client instance and it doesn't get a chance to fully flush messages before Lambda terminates. We decided to
+    customise this module in this project and allow us to utilise a single instance of a LogDNA logger object so that
+    `ensureFlushAll()` can flush those messages before we terminate Lambda function. This single LogDNA is shared and
+    used by both console log wrapper and LogDNA transport as part of Winston log system.
+  - Although it is not a major change, users of this module would like an explicably upgraded version. Just update to
+    the most recent v2 version; no API modifications are necessary on the consumer side.
+  - Also moved `createLoggerObject()` into this shared module so it's easier to use and prefix message before returning
+    the actual logger object. e.g. `createLoggerObject(`[LOG-PREFIX]`);`
+  - ![V2 Diagram](./docs/v2-diagram.png)
 
 ## 1) Use Console Logger
 
@@ -55,66 +82,10 @@ by setting `LOGDNA_ENABLED=false` in your env variables.
     // Don't need to call consoleLogger.flushAll(), logdna object has default flush interval interval at 250ms
 ```
 
-### Lambda: Use with an Aync Handler
+## Flush All Messages
 
-```
-  import { consoleLogger, flushAll } from '@beforeyoubid/logger-adapter';
-  consoleLogger.init();
-
-  // Ensure the we flush all messages before Lambda function gets terminated
-  const yourLambdaHandler = async (event, context) => {
-    try {
-      console.debug('Sample debug log - this message only show up when LOG_LEVEL is set to "debug"')
-
-      const result = await yourNormalProcess();
-
-      await flushAll(); // Trigger to flush all messages
-
-      return result;
-    } catch (e) {
-      // handle error
-      await flushAll(); // Trigger to flush all messages
-
-      // Throw or send result as usual
-      throw e;
-
-      // Or handle it nicely
-      // return unsuccessfulResponse;
-    }
-  }
-
-```
-
-### Lambda: Use with a Callback Handler
-
-```
-  import { consoleLogger, flushAll } from '@beforeyoubid/logger-adapter';
-  consoleLogger.init();
-
-  const yourLambdaHandler = (event, context, callback) => {
-    try {
-      console.debug('Sample debug log - this message only show up when LOG_LEVEL is set to "debug"')
-
-      const result = yourNormalProcess();
-
-      callback(null, yourNormalResponseObject);
-
-      flushAll(); // Trigger to flush all messages
-    } catch (e) {
-
-      // Ensure the we flush all messages before Lambda function gets terminated
-      flushAll(); // Trigger to flush all messages
-
-      // Call a callback with error
-      callback(yourErrorObject);
-
-      // Or return unsuccessful response
-      // https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-output-format
-      // callback(null, unsuccessfulResponse);
-    }
-  }
-
-```
+LogDNA puts messages in the buffer and push out every 250ms. If Lambda is terminated before some of these intervals,
+it's likely that some of message logs are not sent to LogDNA. Use `ensureFlushAll()` to flush messages automatically.
 
 ### Lambda: Use a handler wrapper for Serverless Express
 
@@ -122,26 +93,17 @@ by setting `LOGDNA_ENABLED=false` in your env variables.
   import { consoleLogger, ensureFlushAll } from '@beforeyoubid/logger-adapter';
   consoleLogger.init();
 
-  export default ensureFlushAll(graphqlHandler);
+  export default ensureFlushAll(yourLambdaHandler);
 
 ```
 
-### Lambda: Use with a Callback Handler (Apollo GraphQL Handler)
+### Lambda: Use with a Callback Handler
 
 ```
   import { consoleLogger, ensureFlushAllCallback } from '@beforeyoubid/logger-adapter';
   consoleLogger.init();
 
-  // Existing graphql hander - it uses callback signature
-  const graphqlHandler = server.createHandler({
-    cors: {
-      origin: '*',
-      allowedHeaders: ['x-api-token', 'Authorization'],
-      methods: ['GET', 'POST'],
-    },
-  });
-
-  export default ensureFlushAllCallback(graphqlHandler);
+  export default ensureFlushAllCallback(yourLambdaHandlerCallback);
 
 ```
 
@@ -172,76 +134,42 @@ of the environment variable.
     logger.info('This message only show up when LOG_LEVEL is set to "info"')
 ```
 
-### Lambda: Use with an Aync Handler
+### Lambda: Use a handler wrapper for Serverless Express
 
 ```
-  import { logger, flushAll } from '@beforeyoubid/logger-adapter';
+  import { logger, ensureFlushAll } from '@beforeyoubid/logger-adapter';
 
-  const yourLambdaHandler = async (event, context) => {
-    try {
-      logger.debug('Sample debug log - this message only show up when LOG_LEVEL is set to "debug"')
+  // you can use logger.debug('log text in a string format');
 
-      const result = await yourNormalProcess();
-
-      // Ensure the we flush all messages before Lambda function gets terminated
-      await flushAll();
-
-      return result;
-    } catch (e) {
-      // Ensure the we flush all messages before Lambda function gets terminated
-      await flushAll(); // Trigger to flush all messages
-
-      // Throw or send result as usual
-      throw e;
-
-      // Or handle it nicely
-      // return unsuccessfulResponse;
-    }
-  }
+  export default ensureFlushAll(yourLambdaHandler);
 
 ```
 
 ### Lambda: Use with a Callback Handler
 
 ```
-  import { logger, flushAll } from '@beforeyoubid/logger-adapter';
+  import { logger, ensureFlushAllCallback } from '@beforeyoubid/logger-adapter';
 
-  const yourLambdaHandler = (event, context, callback) => {
-    try {
-      logger.debug('Sample debug log - this message only show up when LOG_LEVEL is set to "debug"')
+  // you can use logger.debug('log text in a string format');
 
-      const result = yourNormalProcess();
+  export default ensureFlushAllCallback(yourLambdaHandlerCallback);
 
-      callback(null, yourNormalResponseObject);
-
-      // Ensure the we flush all messages before Lambda function gets terminated
-      flushAll(); // Trigger to flush all messages
-    } catch (e) {
-      // Ensure the we flush all messages before Lambda function gets terminated
-      flushAll(); // Trigger to flush all messages
-
-      // Call a callback with error
-      callback(yourErrorObject);
-
-      // Or return unsuccessful response
-      // https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-output-format
-      // callback(null, unsuccessfulResponse);
-    }
-  }
 
 ```
 
-## Flush All Messages
+### Prefixing your log message
 
-LogDNA puts messages in the buffer and push out every 250ms. If Lambda is terminated before some of these intervals,
-it's likely that some of message logs are not sent to LogDNA.
+In some cases, you may want to have a clearer log message by prefixing them with a predefined string e.g. name of your
+module so they look like this. ![Log prefix](./docs/log-prefix.png)
 
-We just need to ensure that after we've completed the business logic and before the Lambda function is terminated, we
-flush all messages. We can just call a LogDNA `flushAll()` function and this module export this logic for us to use.
-Depending on how your Lambda handler is set up, but there are three variances we have observed.
+```
+  import { getLoggerObject } from '@beforeyoubid/logger-adapter';
 
-1. Async handler
-2. Async handler but use Serverless Express framework
-3. Apollo non-async handler which is created by a `createHandler()` function
+  const logger = getLoggerObject('[CoreLogicListingProvider]');
 
-Please see usage examples from the above sections
+  logger.info('the usual log string...')
+```
+
+**Notes that** this function just wraps the original Winston logger instance your normally access from this line.
+`import { logger } from '@beforeyoubid/logger-adapter';`. It only wraps and add the prefix the log line for you and
+returns with debug, info, warn, error functions.

@@ -1,4 +1,4 @@
-import { ILogDNAParams } from './types';
+import { type ILogDNAParams } from './types';
 
 const getEnvs = (env = process?.env || {}) => {
   const {
@@ -33,7 +33,7 @@ const getLogParams = (env = process?.env || {}): ILogDNAParams => {
     env: STAGE,
     app: AWS_LAMBDA_FUNCTION_NAME,
     hostname: STAGE,
-    index_meta: true,
+    indexMeta: true,
     tags: [AWS_LAMBDA_FUNCTION_NAME, STAGE],
     level: LOG_LEVEL,
     handleExceptions: true,

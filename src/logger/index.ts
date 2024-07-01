@@ -1,7 +1,9 @@
 import { getLogParams } from '../params';
-import { getLogger } from './logger';
+import { setupWinstonLogger } from './logger';
 
 const logParams = getLogParams();
-const logger = getLogger(logParams);
+
+// Create a singleton logger object during module initialisation
+const logger = setupWinstonLogger(logParams);
 
 export { logger };
