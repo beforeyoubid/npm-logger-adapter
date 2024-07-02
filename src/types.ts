@@ -7,7 +7,7 @@ export interface ILogDNALogOptions {
   env: string;
   app: string;
   hostname: string;
-  index_meta: boolean;
+  indexMeta: boolean;
   tags: Array<string>;
   level: string;
   handleExceptions: boolean;
@@ -21,3 +21,5 @@ export interface ILogDNAParams {
   functionName: string;
   logDNAOptions: ILogDNALogOptions;
 }
+
+export type WrappedLogger = Record<string, (...args: unknown[]) => void>;

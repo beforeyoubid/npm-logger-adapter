@@ -1,15 +1,15 @@
 import winston from 'winston';
 
-import { getLogger } from '../src/logger/logger';
+import { setupWinstonLogger } from '../../../src/logger/logger';
 
-type ILogDNAParams = Parameters<typeof getLogger>[0];
+type ILogDNAParams = Parameters<typeof setupWinstonLogger>[0];
 
 jest.mock('winston', () => ({
   ...jest.requireActual('winston'),
   createLogger: jest.fn(),
 }));
 
-describe('getLogger', () => {
+describe('setupWinstonLogger', () => {
   let debugMock: jest.Mock;
   let addMock: jest.Mock;
   beforeAll(() => {
@@ -25,7 +25,7 @@ describe('getLogger', () => {
     addMock.mockClear();
   });
   it('should return logger', () => {
-    const logger = getLogger({} as ILogDNAParams);
+    const logger = setupWinstonLogger({} as ILogDNAParams);
     expect(logger).toEqual({
       add: addMock,
       debug: debugMock,
@@ -34,7 +34,7 @@ describe('getLogger', () => {
   describe('logdna transport', () => {
     describe('when keys provided', () => {
       it('should add the transport', () => {
-        getLogger({
+        setupWinstonLogger({
           logDNAOptions: {
             key: Math.random().toString(),
           },
@@ -46,7 +46,7 @@ describe('getLogger', () => {
     });
     describe('when keys not provided', () => {
       it('shouldnt add the transport', () => {
-        getLogger({
+        setupWinstonLogger({
           logDNAOptions: {},
         } as ILogDNAParams);
         expect(addMock).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe('getLogger', () => {
         process.env.AWS_LAMBDA_FUNCTION_NAME = Math.random().toString();
       });
       it('should print disabled msg', () => {
-        getLogger({
+        setupWinstonLogger({
           logDNAOptions: {},
         } as ILogDNAParams);
         expect(debugMock).toHaveBeenCalledWith('LOGDNA is disabled');
@@ -70,7 +70,7 @@ describe('getLogger', () => {
         delete process.env.AWS_LAMBDA_FUNCTION_NAME;
       });
       it('should not print disabled msg', () => {
-        getLogger({
+        setupWinstonLogger({
           logDNAOptions: {},
         } as ILogDNAParams);
         expect(debugMock).not.toHaveBeenCalledWith('LOGDNA is disabled');
