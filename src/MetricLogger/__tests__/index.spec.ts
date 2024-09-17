@@ -144,6 +144,7 @@ describe('MetricLogger', () => {
         res: { ...defaultMetric.res, isSuccessful: false, errorCode: 'some-error-code' },
       };
       metricLogger.error('some-error-code');
+      metricLogger.setMetric('res.isSuccessful', false);
       const result = metricLogger.getMetric();
       expect(result.req.userId).toEqual(expectedUserId);
       expect(result.res.isSuccessful).toEqual(expectedResult.res.isSuccessful);

@@ -18,11 +18,11 @@ export class MetricLogger<T> {
   /**
    * Trigger to send log message over the supplied logger object
    * @param metric
-   * @param stringifiedMetric
+   * @param stringifyMetric
    */
-  sendLog(metric: T, stringifiedMetric = true): void {
+  sendMetric(metric: T, stringifyMetric = true): void {
     if (!this._isTest) {
-      const metricToSend = stringifiedMetric ? JSON.stringify(metric) : metric;
+      const metricToSend = stringifyMetric ? JSON.stringify(metric) : metric;
       this._logger.info(metricToSend);
     }
   }
@@ -57,17 +57,19 @@ export class MetricLogger<T> {
    * @returns
    */
   success() {
-    this.setMetric('res.errorCode', '');
-    return this.sendLog(this.getMetric());
+    return this.sendMetric(this.getMetric());
   }
 
   /**
-   * Capture the error
-   * @param cached
+   * A handy function to capture the error
+   * @param errorCode
+   * @param errorField
    * @returns
    */
-  error(errorCode: string = '') {
-    this.setMetric('res.errorCode', errorCode);
-    return this.sendLog(this.getMetric());
+  error(errorCode: string = '', errorField: string = 'res.errorCode') {
+    if (errorField) {
+      this.setMetric(errorField, errorCode);
+    }
+    return this.sendMetric(this.getMetric());
   }
 }
