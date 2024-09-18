@@ -1,6 +1,6 @@
 {
   "name": "@beforeyoubid/logger-adapter",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A platform logger module to send the log messages to Mezmo (formerly LogDNA).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

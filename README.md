@@ -195,6 +195,6 @@ returns with debug, info, warn, error functions.
 
 **How to use:**
 
-- [Sample Metric](./samples/metricLogger.sample.ts)
+- [Sample Metric](./samples/metricLogger.md)
 - [Sample 1](./samples/metricLogger1.sample.ts)
 - [Sample 2](./samples/metricLogger2.sample.ts)
