@@ -19,7 +19,7 @@ const yourHandler = async () => {
 
   // 4) Send the metric to Mezmo, this will be logged as a JSON object
   // Should send once per execution to avoid duplicate metric
-  metricLogger.sendMetric(metric);
+  metricLogger.sendMetric();
 };
 
 // Example if you use Metric Logger in your handler

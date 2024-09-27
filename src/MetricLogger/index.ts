@@ -20,7 +20,7 @@ export class MetricLogger<T> {
    * @param metric
    * @param stringifyMetric
    */
-  sendMetric(metric: T, stringifyMetric = true): void {
+  sendMetric(metric: T = this._metric, stringifyMetric = true): void {
     if (!this._isTest) {
       const metricToSend = stringifyMetric ? JSON.stringify(metric) : metric;
       this._logger.info(metricToSend);
