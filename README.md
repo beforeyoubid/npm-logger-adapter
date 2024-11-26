@@ -51,6 +51,8 @@ can also helps you out as well.
   - Also moved `createLoggerObject()` into this shared module so it's easier to use and prefix message before returning
     the actual logger object. e.g. `createLoggerObject(`[LOG-PREFIX]`);`
   - ![V2 Diagram](./docs/v2-diagram.png)
+- **v2.0.3 onwards**
+  - Adding generic `MetricLogger`
 
 ## 1) Use Console Logger
 
@@ -165,7 +167,7 @@ module so they look like this. ![Log prefix](./docs/log-prefix.png)
 ```
   import { getLoggerObject } from '@beforeyoubid/logger-adapter';
 
-  const logger = getLoggerObject('[CoreLogicListingProvider]');
+  const logger = getLoggerObject('[Your Custom Prefix]');
 
   logger.info('the usual log string...')
 ```
@@ -173,3 +175,26 @@ module so they look like this. ![Log prefix](./docs/log-prefix.png)
 **Notes that** this function just wraps the original Winston logger instance your normally access from this line.
 `import { logger } from '@beforeyoubid/logger-adapter';`. It only wraps and add the prefix the log line for you and
 returns with debug, info, warn, error functions.
+
+## MetricLogger
+
+**Motivation:**
+
+- Mezmo is one of the leading telemetry tools for logging and debugging
+- We can also utilise Mezmo to collect, process and display business metrics based on log messages without extra fee on
+  the existing plan
+- The setup is very simple and Mezmo does this out of the box
+
+**How does it work?**
+
+- When a JSON string (e.g. `JSON.stringify(jsonObject)`) is sent to Mezmo, Mezmo is smart enough to parse this into a
+  json object and index them automatically
+- With this process, we can search for any value in the object and/or create a dashboard on any specific metric we see
+  fit
+- The only drawback, the data retention is usually limited to 30 days as per the data retention policy on the account
+
+**How to use:**
+
+- [Sample Metric](./samples/metricLogger.md)
+- [Sample 1](./samples/metricLogger1.sample.ts)
+- [Sample 2](./samples/metricLogger2.sample.ts)
