@@ -3,6 +3,7 @@ import { type ILogDNAParams } from './types';
 const getEnvs = (env = process?.env || {}) => {
   const {
     LOG_LEVEL = 'info',
+    CONSOLE_LOG_LEVEL,
     LOGDNA_KEY = '',
     STAGE = 'n/a',
     AWS_LAMBDA_FUNCTION_NAME = 'n/a',
@@ -12,6 +13,7 @@ const getEnvs = (env = process?.env || {}) => {
 
   return {
     LOG_LEVEL,
+    CONSOLE_LOG_LEVEL,
     LOGDNA_KEY,
     STAGE,
     AWS_LAMBDA_FUNCTION_NAME,
@@ -25,7 +27,7 @@ const sendToRemote = (logDNAKey: string, logDNAEnabled: string): boolean => {
 };
 
 const getLogParams = (env = process?.env || {}): ILogDNAParams => {
-  const { LOG_LEVEL, LOGDNA_KEY, STAGE, AWS_LAMBDA_FUNCTION_NAME, LOGDNA_ENABLED, LOGDNA_SUPPRESS_FLUSH_ALL } =
+  const { LOG_LEVEL, CONSOLE_LOG_LEVEL, LOGDNA_KEY, STAGE, AWS_LAMBDA_FUNCTION_NAME, LOGDNA_ENABLED, LOGDNA_SUPPRESS_FLUSH_ALL } =
     getEnvs(env);
 
   const logDNAOptions = {
@@ -41,10 +43,13 @@ const getLogParams = (env = process?.env || {}): ILogDNAParams => {
 
   return {
     logLevel: LOG_LEVEL,
+    consoleLevel: CONSOLE_LOG_LEVEL,
     logDNAKey: LOGDNA_KEY,
     sendToRemote: sendToRemote(LOGDNA_KEY, LOGDNA_ENABLED),
     logDNASuppressFlushAll: LOGDNA_SUPPRESS_FLUSH_ALL === 'true',
     functionName: AWS_LAMBDA_FUNCTION_NAME,
+    serviceName: AWS_LAMBDA_FUNCTION_NAME !== 'n/a' ? AWS_LAMBDA_FUNCTION_NAME : undefined,
+    stage: STAGE !== 'n/a' ? STAGE : undefined,
     logDNAOptions,
   };
 };
