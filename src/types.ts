@@ -20,6 +20,12 @@ export interface ILogDNAParams {
   logDNASuppressFlushAll: boolean;
   functionName: string;
   logDNAOptions: ILogDNALogOptions;
+  /** Override the log level for the Console transport only (e.g. 'warn' to quiet console while keeping debug in LogDNA) */
+  consoleLevel?: string;
+  /** Service name attached to every log line as defaultMeta.service */
+  serviceName?: string;
+  /** Environment name attached to every log line as defaultMeta.env */
+  stage?: string;
 }
 
 export type WrappedLogger = Record<string, (...args: unknown[]) => void>;
