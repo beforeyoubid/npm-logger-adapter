@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/app/
   docker:
-    - image: cimg/node:16.20.0
+    - image: cimg/node:18.20.4
   resource_class: medium
 
 version: 2.1
@@ -15,8 +15,7 @@ jobs:
       - run:
           name: Setup Code Climate test-reporter
           command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+            curl -fL https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter || echo "CodeClimate reporter unavailable, skipping"
       - run: NODE_ENV=development yarn
       - run: mkdir -p ./reports/jest/ ; true
       - run:
@@ -29,8 +28,7 @@ jobs:
       - run:
           name: Upload to CodeClimate
           command: |
-            ./cc-test-reporter format-coverage -t=clover coverage/clover.xml
-            ./cc-test-reporter upload-coverage
+            [ -x ./cc-test-reporter ] && ./cc-test-reporter format-coverage -t=clover coverage/clover.xml && ./cc-test-reporter upload-coverage || echo "CodeClimate reporter unavailable, skipping"
       - save_cache:
           key: node_modules-{{ checksum "yarn.lock" }}
           paths:
@@ -85,7 +83,7 @@ jobs:
           key: node_modules-{{ checksum "yarn.lock" }}
       - run: NODE_ENV=development yarn
       - run: yarn build-and-publish-dryrun
-      - run: npm i -g verdaccio
+      - run: npm i -g verdaccio@5
       - run:
           name: Wait for Verdaccio to start
           command: |
