@@ -27,8 +27,15 @@ const sendToRemote = (logDNAKey: string, logDNAEnabled: string): boolean => {
 };
 
 const getLogParams = (env = process?.env || {}): ILogDNAParams => {
-  const { LOG_LEVEL, CONSOLE_LOG_LEVEL, LOGDNA_KEY, STAGE, AWS_LAMBDA_FUNCTION_NAME, LOGDNA_ENABLED, LOGDNA_SUPPRESS_FLUSH_ALL } =
-    getEnvs(env);
+  const {
+    LOG_LEVEL,
+    CONSOLE_LOG_LEVEL,
+    LOGDNA_KEY,
+    STAGE,
+    AWS_LAMBDA_FUNCTION_NAME,
+    LOGDNA_ENABLED,
+    LOGDNA_SUPPRESS_FLUSH_ALL,
+  } = getEnvs(env);
 
   const logDNAOptions = {
     key: LOGDNA_KEY,

@@ -43,11 +43,7 @@ const setupWinstonLogger = (params: ILogDNAParams): winston.Logger => {
   if (serviceName) defaultMeta.service = serviceName;
   if (stage) defaultMeta.env = stage;
 
-  const logger = createWinstonLogger(
-    logLevel,
-    Object.keys(defaultMeta).length ? defaultMeta : undefined,
-    consoleLevel
-  );
+  const logger = createWinstonLogger(logLevel, Object.keys(defaultMeta).length ? defaultMeta : undefined, consoleLevel);
 
   if (isEnabled) {
     const logdnaClient = createLogDNAClient(params);
