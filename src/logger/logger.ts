@@ -5,6 +5,11 @@ import { LogDNATransport } from '../transports/logdnaWinston';
 import { isLogDNAEnabled } from '../util';
 const { format, transports } = winston;
 
+const uppercaseLevel = format(info => {
+  info.level = info.level.toUpperCase();
+  return info;
+});
+
 const createWinstonLogger = (
   logLevel: string,
   defaultMeta?: Record<string, string>,
@@ -13,12 +18,12 @@ const createWinstonLogger = (
   const logger = winston.createLogger({
     level: logLevel || 'info',
     defaultMeta,
-    format: format.combine(format.timestamp(), format.json()),
+    format: format.combine(format.timestamp(), uppercaseLevel(), format.json()),
     transports: [
       new transports.Console({
         level: consoleLevel || logLevel || 'info',
         handleExceptions: true,
-        format: format.combine(format.timestamp(), format.json()),
+        format: format.combine(format.timestamp(), uppercaseLevel(), format.json()),
       }),
     ],
     rejectionHandlers: [new transports.Console()],
